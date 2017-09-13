@@ -13,6 +13,9 @@ DOC		:=	docs
 INC		:=	include
 BLD		:=	_build
 
+DIRS 	:=	$(SRC) $(LIB) $(TST) $(DOC) $(INC) \
+		$(BLD) $(BLD)/$(SRC) $(BLD)/$(LIB) $(BLD)/$(TST)
+
 USRCS = $(wildcard $(SRC)/*.cpp)
 LSRCS = $(wildcard $(LIB)/*.cpp)
 TSRCS = $(wildcard $(TST)/*.cpp)
@@ -39,7 +42,7 @@ LFLAGS	:= -L $(LIB) $(LIBAR)
 # targets follow ----------------------
 
 .PHONY: all
-all:	$(USRAPP) $(TSTAPP)
+all:	directories $(USRAPP) $(TSTAPP)
 
 .PHONY:	run
 run:	$(USRAPP)
@@ -57,6 +60,11 @@ $(TSTAPP):	$(TOBJS) $(LIBAR)
 
 $(LIBAR):	$(LOBJS)
 	$(AR) rcs $@ $^
+
+# build any needed directories
+.PHONY:	directories
+directories: $(DIRS)
+	mkdir -p $^
 
 # inplicit rule to build object files
 $(BLD)/%.o:	%.cpp
@@ -78,6 +86,7 @@ debug:
 	-@echo UDEPS = $(UDEPS)
 	-@echo LDEPS = $(LDEPS)
 	-@echo TDEPS = $(TDEPS)
+	-@echo DIRS  = $(DIRS)
 
 # include compiler generated dependencies
 -include $(BLD)/*.d
