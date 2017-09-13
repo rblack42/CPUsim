@@ -64,7 +64,9 @@ $(LIBAR):	$(LOBJS)
 # build any needed directories
 .PHONY:	directories
 directories: $(DIRS)
-	mkdir -p $^
+
+$(DIRS):
+	mkdir -p $@
 
 # inplicit rule to build object files
 $(BLD)/%.o:	%.cpp
