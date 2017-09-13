@@ -10,3 +10,6 @@
 *.a
 *.d
 
+# Project
+_build
+docs/_venv

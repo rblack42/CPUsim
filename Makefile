@@ -35,6 +35,9 @@ DEPS	:= $(UDEPS) $(LDEPS) $(TDEPS)
 CXX	:= g++
 AR	:= ar
 RM	:= RM -f
+PIP	:= pip
+SPHINX	:= sphinx-build
+VENV	:= virtualenv
 
 CFLAGS	:= -std=c++11 -I $(INC)
 LFLAGS	:= -L $(LIB) $(LIBAR)
@@ -89,6 +92,20 @@ debug:
 	-@echo LDEPS = $(LDEPS)
 	-@echo TDEPS = $(TDEPS)
 	-@echo DIRS  = $(DIRS)
+
+# build rules for Sphinx documentation
+.PHONY:	install
+install:	docs/_venv
+	cd docs && source _venv/bin/activate && \
+	$(PIP) install -r requirements.txt && \
+	sphinx-quickstart
+
+docs/_venv:
+	$(VENV)	docs/_venv
+
+html:
+	cd docs && source _venv/bin/activate && \
+	$(SPHINX) -b html -d ../_build/doctrees . ../_build/html
 
 # include compiler generated dependencies
 -include $(BLD)/*.d

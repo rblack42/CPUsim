@@ -11,8 +11,6 @@ A simple CPU simulator.
 Travis-CI Built status:
 ***********************
 
-Code:
-
 ..  image::  https://travis-ci.org/rblack42/CPUsim.svg?branch=master
 
 Cloning this Project
@@ -27,7 +25,7 @@ actual project is not installed after this step.
 Testing the Starter code
 ========================
 
-..  code-block: bash
+..  code-block:: bash
 
     $ make
     $ make run
