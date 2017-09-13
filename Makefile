@@ -98,7 +98,8 @@ debug:
 install:	docs/_venv
 	cd docs && source _venv/bin/activate && \
 	$(PIP) install -r requirements.txt && \
-	sphinx-quickstart
+	mkdir -p _static && cp ../files/conf.py . && \
+	cp ../files/index.rst .
 
 docs/_venv:
 	$(VENV)	docs/_venv
