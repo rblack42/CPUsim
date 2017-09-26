@@ -34,7 +34,7 @@ DEPS	:= $(UDEPS) $(LDEPS) $(TDEPS)
 # tools
 CXX	:= g++
 AR	:= ar
-RM	:= RM -f
+RM	:= rm -f
 PIP	:= pip
 SPHINX	:= sphinx-build
 VENV	:= virtualenv
