@@ -36,7 +36,7 @@ CXX	:= g++
 AR	:= ar
 RM	:= RM -f
 PIP	:= pip
-SPHINX	:= sphinx-build
+SPHINX	:= _venv/bin/sphinx-build
 VENV	:= python3 -m venv
 
 CFLAGS	:= -std=c++11 -I $(INC)
@@ -102,19 +102,22 @@ debug:
 # build rules for Sphinx documentation
 .PHONY:	install
 # target: install - build sphinx documentation project
-install:	docs/_venv
-	cd docs && source _venv/bin/activate && \
-	$(PIP) install -r requirements.txt && \
+install:	docs/_venv activate
+	cd docs && _venv/bin/pip install -Ur requirements.txt && \
 	mkdir -p _static && cp ../files/conf.py . && \
 	cp ../files/index.rst .
 
 docs/_venv:
 	$(VENV)	docs/_venv
 
+.PHONY:	activate
+activate:	docs/_venv
+	bash docs/_venv/bin/activate
+
 .PHONY: html
 # target: html - build sphinx html files
-html:
-	cd docs && source _venv/bin/activate && \
+html:	activate
+	cd docs && \
 	$(SPHINX) -b html -d ../_build/doctrees . ../_build/html
 
 .PHONY: help
