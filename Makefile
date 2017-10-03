@@ -28,16 +28,16 @@ OBJS  = $(UOBJS) $(LOBJS) $(TOBJS)
 # generate a list of dependencies
 UDEPS	:= $(UOBJS:.o=.d)
 LDEPS	:= $(LOBJS:.o=.d)
-TDEPS	:= $(.OBJS:.o=.d)
+TDEPS	:= $(TOBJS:.o=.d)
 DEPS	:= $(UDEPS) $(LDEPS) $(TDEPS)
 
 # tools
 CXX	:= g++
 AR	:= ar
-RM	:= rm -f
+RM	:= RM -f
 PIP	:= pip
 SPHINX	:= sphinx-build
-VENV	:= virtualenv
+VENV	:= python3 -m venv
 
 CFLAGS	:= -std=c++11 -I $(INC)
 LFLAGS	:= -L $(LIB) $(LIBAR)
@@ -45,13 +45,16 @@ LFLAGS	:= -L $(LIB) $(LIBAR)
 # targets follow ----------------------
 
 .PHONY: all
-all:	directories $(USRAPP) $(TSTAPP)
+# target: all - build directories, app and test-app
+all:	setup $(USRAPP) $(TSTAPP)
 
 .PHONY:	run
+# target: run - run application
 run:	$(USRAPP)
 	./$(USRAPP)
 
 .PHONY: test
+# target: test - run test-app
 test:	$(TSTAPP)
 	./$(TSTAPP)
 
@@ -65,8 +68,9 @@ $(LIBAR):	$(LOBJS)
 	$(AR) rcs $@ $^
 
 # build any needed directories
-.PHONY:	directories
-directories: $(DIRS)
+.PHONY:	setup
+# target: setup - create project directories
+setup: $(DIRS)
 
 $(DIRS):
 	mkdir -p $@
@@ -76,11 +80,13 @@ $(BLD)/%.o:	%.cpp
 	$(CXX) -c $(CFLAGS) $< -o $@ -MMD -MP
 
 .PHONY:	clean
+# target: clean - remove all unneeded files
 clean:
 	$(RM) $(USRAPP) $(TSTAPP) $(OBJS) $(DEPS)
 
 # show file lists
 .PHONY: debug
+# target: debug - display all make variables
 debug:
 	-@echo USRCS = $(USRCS)
 	-@echo LSRCS = $(LSRCS)
@@ -95,6 +101,7 @@ debug:
 
 # build rules for Sphinx documentation
 .PHONY:	install
+# target: install - build sphinx documentation project
 install:	docs/_venv
 	cd docs && source _venv/bin/activate && \
 	$(PIP) install -r requirements.txt && \
@@ -104,9 +111,19 @@ install:	docs/_venv
 docs/_venv:
 	$(VENV)	docs/_venv
 
+.PHONY: html
+# target: html - build sphinx html files
 html:
 	cd docs && source _venv/bin/activate && \
 	$(SPHINX) -b html -d ../_build/doctrees . ../_build/html
+
+.PHONY: help
+# target: help - Display all callable targets
+help:
+	@echo
+	@egrep "^\s*#\s*target\s*:\s*" [Mm]akefile \
+		| sed -E "s/^\s*#\s*target\s*:\s*//g"
+	@echo
 
 # include compiler generated dependencies
 -include $(BLD)/*.d
