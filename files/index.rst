@@ -4,8 +4,9 @@ CPUsim: Simple CPU Simulator
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   :glob:
 
-   decoding-the-makefile
+   *
 
 Indices and tables
 ==================

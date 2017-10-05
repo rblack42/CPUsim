@@ -105,7 +105,8 @@ debug:
 install:	docs/_venv activate
 	cd docs && _venv/bin/pip install -Ur requirements.txt && \
 	mkdir -p _static && cp ../files/conf.py . && \
-	cp ../files/index.rst .
+	cp ../files/index.rst . && \
+	cp ../files/webbrowser _venv/bin
 
 docs/_venv:
 	$(VENV)	docs/_venv
@@ -119,6 +120,12 @@ activate:	docs/_venv
 html:	activate
 	cd docs && \
 	$(SPHINX) -b html -d ../_build/doctrees . ../_build/html
+
+.PHONY: view
+# target: - view generated HTML doc pages
+view:	activate html
+	cd docs && \
+	_venv/bin/webbrowser
 
 .PHONY: help
 # target: help - Display all callable targets
