@@ -26,7 +26,7 @@ start by cloning the example project:
 ..  code-block:: bash
 
     $ cd ~/cosc2325
-    $ git clone https://github.com/rblack42/CPUsim
+    $ git clone git@github.com:rblack42/CPUsim
 
 Next, assuming you have your empty lab project file cloned into this same
 directory:
